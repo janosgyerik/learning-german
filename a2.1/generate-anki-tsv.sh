@@ -29,6 +29,10 @@ info() {
     echo "* $*"
 }
 
+strip_trailing_dot() {
+    echo "${1%.}"
+}
+
 convert_flashcards_to_anki_tsv() {
     local flashcards_file
     flashcards_file=$1
@@ -37,6 +41,8 @@ convert_flashcards_to_anki_tsv() {
 
     while read front; do
         read back || fatal 'could not read back side of card'
+        front=$(strip_trailing_dot "$front")
+        back=$(strip_trailing_dot "$back")
         printf "%s\t%s\n" "$front" "$back"
         printf "%s\t%s\n" "$back" "$front"
     done < "$flashcards_file"
