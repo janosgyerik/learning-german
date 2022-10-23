@@ -20,16 +20,29 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+fatal() {
+    echo >&2 "fatal: $*"
+    exit 1
+}
+
+info() {
+    echo "* $*"
+}
+
 convert_flashcards_to_anki_tsv() {
     local flashcards_file
     flashcards_file=$1
+
+    local front back
+
     while read front; do
-        read back
+        read back || fatal 'could not read back side of card'
         printf "%s\t%s\n" "$front" "$back"
         printf "%s\t%s\n" "$back" "$front"
     done < "$flashcards_file"
 }
 
 for f in *.flashcards; do
+    info "generating for $f ..."
     convert_flashcards_to_anki_tsv "$f" > "$f.anki.tsv"
 done
