@@ -7,4 +7,4 @@ if [ $# != 2 ]; then
     exit 1
 fi
 
-paste "$1" "$2" | tr '\t' '\n'
+paste "$1" "$2" | tr '\t' '\n' | sed -e 's/[ .]*$//'
